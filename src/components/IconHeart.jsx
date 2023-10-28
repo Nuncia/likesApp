@@ -1,8 +1,11 @@
+import PropTypes from "prop-types";
+
 const IconHeart = ({ filled }) => {
   return (
     <svg
       width="40px"
       viewBox="0 0 24 24"
+      style={{position:'absolute'}}
     >
       <path
         fill={filled ? "red" : "white"}
@@ -12,3 +15,7 @@ const IconHeart = ({ filled }) => {
   );
 };
 export default IconHeart;
+
+IconHeart.propTypes = {
+  filled: PropTypes.boolean
+}

@@ -48,12 +48,12 @@ const Gallery = () => {
         cargando ? ('Cargando ...') : 
           result.length > 0 ? 
           result.map((item) => (
-                <div key={item.id} className="card" style={{width: '18rem'}}>
-                  <IconHeart filled={true}/>
-                  <img src={item.src} className="card-img-top" alt={item.alt}/>
-                  <div className="card-body">
+                <div key={item.id}>
+                  <IconHeart className='corazon' filled={true}/>
+                  <img src={item.src} className="card-img-top" alt={item.alt} />
+                  {/* <div className="card-body">
                     <a href={item.photographer_url} className="card-title">{item.photographer}</a>
-                  </div>
+                  </div> */}
                 </div>
           )) : 'No hay imagenes disponibles' 
       }
