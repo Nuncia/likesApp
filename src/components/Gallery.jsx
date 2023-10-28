@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import photos from '../js/photos.json';
+// import Card from "./Card";
+import IconHeart from "./IconHeart";
 
 const Gallery = () => {
   let resultados = [];
   const [result, setResult] = useState([]);
+  const [cargando, setCargando] = useState(true)
   useEffect( () => {
     obtenerGaleria();
   }, [])
 
-  const obtenerGaleria =  ( async() => {
+  const obtenerGaleria = useCallback ( async() => {
     
     try{
       const respuesta = await fetch("https://api.pexels.com/v1/search?query=people",{
@@ -17,8 +19,10 @@ const Gallery = () => {
         }});
       const datos = await respuesta.json();
       resultados = datos.photos;
+
       let fotos = []
       for(let item in resultados){
+        console.log('item: ',resultados[item].src)
          fotos.push({
           id:resultados[item].id,
           alt: resultados[item].alt,
@@ -26,28 +30,32 @@ const Gallery = () => {
           liked: resultados[item].liked,
           photographer: resultados[item].photographer,
           photographer_url: resultados[item].photographer_url,
-          url: resultados[item].url
+          url: resultados[item].url,
+          src: resultados[item].src.original
          }) 
          
       }
-      console.log(fotos.length)
       setResult(fotos)
     } catch (e){
       alert(e.message);
     }
-   
+    setCargando(false);
   }); 
 
   return (
     <div className="gallery grid-columns-5 p-3">
-      {result.length}
       {
-        result.length > 0 ? 
-        result.map((item) => (
-          <div key={item.id}>
-            <img src={item.url} alt={item.alt} />
-          </div>
-        )) : 'No hay datos disponibles'
+        cargando ? ('Cargando ...') : 
+          result.length > 0 ? 
+          result.map((item) => (
+                <div key={item.id} className="card" style={{width: '18rem'}}>
+                  <IconHeart filled={true}/>
+                  <img src={item.src} className="card-img-top" alt={item.alt}/>
+                  <div className="card-body">
+                    <a href={item.photographer_url} className="card-title">{item.photographer}</a>
+                  </div>
+                </div>
+          )) : 'No hay imagenes disponibles' 
       }
     </div>
     );
