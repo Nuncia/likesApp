@@ -1,26 +1,26 @@
 import { Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
 
+import Navbar from "./components/Navbar";
 import Favorites from "./views/Favorites";
 import Home from "./views/Home";
-
-const PHOTO_URL = "/photos.json";
+import LikesProvider from "./context/LikesContext";
 
 const App = () => {
   return (
     <div>
-      <Navbar />
-
-      <Routes>
-        <Route
-          path="/"
-          element={<Home />}
-        />
-        <Route
-          path="/favoritos"
-          element={<Favorites />}
-        />
-      </Routes>
+      <LikesProvider>
+        <Navbar />
+        <Routes>
+          <Route
+            path="/"
+            element={<Home />}
+          />
+          <Route
+            path="/favoritos"
+            element={<Favorites />}
+          />
+        </Routes>
+      </LikesProvider>
     </div>
   );
 };

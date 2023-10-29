@@ -1,63 +1,51 @@
-import { useCallback, useEffect, useState } from "react";
-// import Card from "./Card";
+import { useCallback, useContext, useEffect, useState } from "react";
 import IconHeart from "./IconHeart";
+import { LikesContext } from "../context/LikesContext";
 
 const Gallery = () => {
-  let resultados = [];
-  const [result, setResult] = useState([]);
-  const [cargando, setCargando] = useState(true)
-  useEffect( () => {
-    obtenerGaleria();
-  }, [])
+  const [cargando, setCargando] = useState(true);
+  const { fotos, setFotos, incrementarLikes } = useContext(LikesContext);
 
-  const obtenerGaleria = useCallback ( async() => {
-    
-    try{
-      const respuesta = await fetch("https://api.pexels.com/v1/search?query=people",{
+  useEffect(() => {
+    if(fotos.length == 0){
+      obtenerGaleria();
+    } else{
+      setCargando(false);
+    }
+  }, [fotos]);
+
+  const obtenerGaleria = useCallback(async () => {
+    try {
+      const respuesta = await fetch("https://api.pexels.com/v1/search?query=people", {
         headers: {
           Authorization: "UKeoe1DCnMV0wYmSIomFw7GW5dv5bKKQXPA9Epl70QRXmQMWPa19hYMa"
-        }});
+        }
+      });
       const datos = await respuesta.json();
-      resultados = datos.photos;
-
-      let fotos = []
-      for(let item in resultados){
-        console.log('item: ',resultados[item].src)
-         fotos.push({
-          id:resultados[item].id,
-          alt: resultados[item].alt,
-          height: resultados[item].height,
-          liked: resultados[item].liked,
-          photographer: resultados[item].photographer,
-          photographer_url: resultados[item].photographer_url,
-          url: resultados[item].url,
-          src: resultados[item].src.original
-         }) 
-         
-      }
-      setResult(fotos)
-    } catch (e){
+      const fotosAPI = datos.photos.map(foto => ({ ...foto, likes: 0}));
+      setFotos(fotosAPI);
+    } catch (e) {
       alert(e.message);
     }
     setCargando(false);
-  }); 
+  });
 
   return (
     <div className="gallery grid-columns-5 p-3">
       {
         cargando ? ('Cargando ...') : 
-          result.length > 0 ? 
-          result.map((item) => (
-                <div key={item.id}>
-                  <IconHeart className='corazon' filled={true}/>
-                  <img src={item.src} className="card-img-top" alt={item.alt} />
-                  {/* <div className="card-body">
-                    <a href={item.photographer_url} className="card-title">{item.photographer}</a>
-                  </div> */}
-                </div>
-          )) : 'No hay imagenes disponibles' 
+          fotos.length > 0 ?
+            fotos.map((foto) => (
+              <div key={foto.id} style={{padding: '2px', width: '18rem'}}>
+                <IconHeart className='corazon' filled={foto.likes > 0 ? true : false}/>
+                {/* <div style={{color: 'black'}}>{foto.likes}</div>
+                <div style={{color: 'black'}}>{foto.id}</div> */}
+                <img  onClick={() => incrementarLikes(foto.id)} src={foto.src.original} className="card-img-top" style={{minHeight: '200px'}} alt={foto.alt} />
+              </div>
+            )) : 'No hay imagenes disponibles' 
       }
     </div>
-    );
+  );
 };
+
 export default Gallery;
