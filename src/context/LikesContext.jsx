@@ -6,9 +6,7 @@ const LikesProvider = ({ children }) => {
     const [fotos, setFotos] = useState([]);
     const unLiked = (id) => {
       setFotos(prevFotos =>
-        prevFotos.map(foto =>
-            foto.id === id ? { ...foto, likes: 0 } : foto
-        )
+        prevFotos.map(foto => foto.id === id ? { ...foto, likes: 0 } : foto)
     );
     }
 

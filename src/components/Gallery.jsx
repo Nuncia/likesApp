@@ -40,7 +40,7 @@ const Gallery = () => {
                 <IconHeart className='corazon' filled={foto.likes > 0 ? true : false}/>
                 {/* <div style={{color: 'black'}}>{foto.likes}</div>
                 <div style={{color: 'black'}}>{foto.id}</div> */}
-                <img  onClick={() => incrementarLikes(foto.id)} src={foto.src.original} className="card-img-top" style={{minHeight: '200px'}} alt={foto.alt} />
+                <img  onClick={() => incrementarLikes(foto.id)} src={foto.src.original} className="card-img-top" style={{height: '250px'}} alt={foto.alt} />
               </div>
             )) : 'No hay imagenes disponibles' 
       }
